@@ -1,0 +1,44 @@
+Especificação Técnica: Aplicação Go com API e System Tray1. Resumo do ProjetoO objetivo é desenvolver uma aplicação desktop para Windows, escrita em Go, que opera em segundo plano. A aplicação não terá uma janela principal visível ao iniciar, mas será acessível através de um ícone na bandeja do sistema (System Tray). A função principal da interface visível, quando ativada, é exibir logs das operações realizadas por uma API RESTful local.A API integrada fornecerá endpoints para manipulação de arquivos e execução de processos externos.2. Arquitetura e Estrutura de ArquivosPara garantir a manutenibilidade e testabilidade, o projeto será modularizado da seguinte forma:/go-desktop-app
+|
+├── main.go                 # Ponto de entrada, inicialização da UI e do servidor
+|
+├── api/
+│   ├── server.go           # Configuração e inicialização do servidor HTTP
+│   ├── handlers.go         # Implementação dos handlers para cada rota
+│   └── middleware.go       # Middleware para CORS e logging
+|
+├── core/
+│   ├── filesystem.go       # Lógica para ler e mover arquivos
+│   └── executor.go         # Lógica para executar processos externos (.exe)
+|
+├── ui/
+│   ├── tray.go             # Gerenciamento do ícone e menu da bandeja do sistema
+│   └── logviewer.go        # Componente da janela que exibe os logs
+|
+└── config/
+    └── config.go           # Constantes e configurações (caminhos de diretório)
+3. Componentes Principais3.1. Aplicação Principal (main.go)Inicializa o logger central.Inicia o servidor da API em uma goroutine para não bloquear a thread principal da UI.Chama a função ui.SetupTray() para criar o ícone na bandeja do sistema.Mantém a aplicação em execução.3.2. Servidor API (api/)Utilizará o pacote net/http padrão do Go.CORS: Um middleware será implementado para permitir requisições exclusivamente das origens http://localhost e http://127.0.0.1.Logging: Todas as requisições recebidas e seus resultados (sucesso ou erro) serão registrados.3.3. UI (Bandeja do Sistema e Logs) (ui/)Operação Oculta: A aplicação iniciará sem janela visível.Ícone na Bandeja: Um ícone será adicionado à bandeja do sistema do Windows.Menu de Contexto: O clique com o botão direito no ícone exibirá um menu com as opções:"Abrir Logs" -> Torna a janela de logs visível."Sair" -> Encerra a aplicação de forma segura.Janela de Logs: Uma janela simples que exibe em tempo real as mensagens de log geradas pela API.3.4. Constantes de Diretório (config/)APP_DIR: Definida como C:\app\ARCHIVE_DIR: Definida como C:\app\arquivo_morto\4. Definição das Rotas da APIA API responderá na porta 8080 (ou outra porta configurável).Rota 1: StatusEndpoint: GET /statusDescrição: Verifica se a API está em execução.Requisição: N/AResposta de Sucesso (200 OK):{
+  "status": "API está funcionando"
+}
+Rota 2: Ler Conteúdo do ArquivoEndpoint: POST /escreve_arquivoDescrição: Lê o conteúdo de um arquivo localizado no diretório APP_DIR e o retorna como JSON.Requisição (Body):{
+  "nome_arquivo": "exemplo.txt"
+}
+Lógica:Constrói o caminho completo: C:\app\exemplo.txt.Lê todo o conteúdo do arquivo.Resposta de Sucesso (200 OK):{
+  "conteudo": "O conteúdo do arquivo de texto está aqui."
+}
+Resposta de Erro (404 Not Found): Se o arquivo não existir.{
+  "erro": "Arquivo não encontrado"
+}
+Rota 3: Mover ArquivoEndpoint: POST /move_arquivoDescrição: Move um arquivo do diretório APP_DIR para o ARCHIVE_DIR.Requisição (Body):{
+  "nome_arquivo": "exemplo.txt"
+}
+Lógica:Define a origem: C:\app\exemplo.txt.Define o destino: C:\app\arquivo_morto\exemplo.txt.Move (renomeia) o arquivo.Resposta de Sucesso (200 OK):{
+  "mensagem": "Arquivo movido com sucesso para C:\\app\\arquivo_morto\\exemplo.txt"
+}
+Resposta de Erro (404 Not Found): Se o arquivo de origem não existir.Rota 4: Executar Processo ExternoEndpoint: POST /executar_terceirosDescrição: Inicia um processo executável (.exe) de forma assíncrona.Requisição (Body):{
+  "caminho_executavel": "C:\\caminho\\para\\programa.exe"
+}
+Lógica:Utiliza os/exec para criar o comando.Usa cmd.Start() para iniciar o processo sem bloquear a API. A aplicação não espera o processo terminar.Resposta de Sucesso (200 OK):{
+  "mensagem": "Processo iniciado com sucesso"
+}
+Resposta de Erro (500 Internal Server Error): Se o executável não for encontrado ou houver falha ao iniciar.

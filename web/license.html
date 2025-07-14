@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuração de Licença - Desktop App v1.0.0</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Desktop App">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Icons -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔐</text></svg>">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="app-icon">🔐</div>
+                <h1 class="app-title">Configuração de Licença</h1>
+            </div>
+            <div class="header-center">
+                <span class="app-version">Desktop App v1.0.0</span>
+            </div>
+            <div class="header-right">
+                <button class="nav-btn" onclick="window.location.href='/'">📊 Logs</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content license-content">
+            <!-- License Status Panel -->
+            <section class="license-status-panel">
+                <div class="panel-header">
+                    <h2>Status da Licença</h2>
+                    <button class="refresh-btn" onclick="checkLicenseStatus()">🔄 Atualizar</button>
+                </div>
+                
+                <div class="license-status" id="licenseStatus">
+                    <div class="status-loading">
+                        <span class="loading-spinner">⏳</span>
+                        <span>Verificando status...</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- License Configuration Panel -->
+            <section class="license-config-panel">
+                <div class="panel-header">
+                    <h2>Configurar Licença</h2>
+                </div>
+                
+                <form class="license-form" id="licenseForm">
+                    <div class="form-group">
+                        <label for="token">Token de Licenciamento:</label>
+                        <input type="text" id="token" name="token" placeholder="Digite o token fornecido pelo administrador" required>
+                        <small class="form-help">Token de 64 caracteres fornecido pelo administrador do sistema</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="apiUrl">URL da API (opcional):</label>
+                        <input type="url" id="apiUrl" name="apiUrl" placeholder="http://localhost:8000" value="http://localhost:8000">
+                        <small class="form-help">URL da API de licenciamento (deixe em branco para usar o padrão)</small>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">💾 Salvar Licença</button>
+                        <button type="button" class="btn-secondary" onclick="verifyLicense()">🔍 Verificar</button>
+                        <button type="button" class="btn-danger" onclick="clearLicense()">🗑️ Remover</button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- License Info Panel -->
+            <section class="license-info-panel">
+                <div class="panel-header">
+                    <h2>Informações da Máquina</h2>
+                </div>
+                
+                <div class="machine-info" id="machineInfo">
+                    <div class="info-item">
+                        <span class="info-label">UUID da Máquina:</span>
+                        <span class="info-value" id="deviceUUID">--</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Última Verificação:</span>
+                        <span class="info-value" id="lastCheck">--</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Data de Registro:</span>
+                        <span class="info-value" id="createdAt">--</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Messages -->
+        <div class="message-container" id="messageContainer"></div>
+    </div>
+
+    <script src="license.js"></script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logs da API - Desktop App v1.0.0</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="app-icon">📊</div>
+                <h1 class="app-title">Logs da API</h1>
+            </div>
+            <div class="header-center">
+                <span class="app-version">Desktop App v1.0.0</span>
+            </div>
+            <div class="header-right">
+                <button class="nav-btn" onclick="window.location.href='/license.html'">🔐 Licença</button>
+                <button class="clear-logs-btn" onclick="clearLogs()">🗑️ Limpar Logs</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Left Panel - Activity -->
+            <section class="activity-panel">
+                <div class="panel-header">
+                    <h2>Atividade em Tempo Real</h2>
+                    <div class="status-indicator">
+                        <span class="status-dot active"></span>
+                        <span class="status-text">API Ativa</span>
+                    </div>
+                </div>
+                
+                <div class="logs-container" id="logsContainer">
+                    <!-- Logs will be populated here -->
+                </div>
+            </section>
+
+            <!-- Right Panel - Statistics -->
+            <aside class="stats-panel">
+                <h2>Estatísticas</h2>
+                
+                <div class="stat-item">
+                    <div class="stat-label">Total de Logs:</div>
+                    <div class="stat-value" id="totalLogs">0</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-label">Último Log:</div>
+                    <div class="stat-value" id="lastLogTime">--:--:--</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-label">Erros:</div>
+                    <div class="stat-value error" id="errorCount">0</div>
+                </div>
+                
+                <div class="stat-item">
+                    <div class="stat-label">Sucessos:</div>
+                    <div class="stat-value success" id="successCount">0</div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
